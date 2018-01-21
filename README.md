@@ -44,22 +44,24 @@
 
 ### Supported platforms
 
-- Android
-- iOS
-- Windows
+- Android 4.4+
+- iOS 10+
+- Windows 10
 
 <br>
 <br>
 
 ## Important Notice
 
-The _x_ branch has been merged into _master_ (30.10.2017)
+Please make sure that you always read the tagged README for the version you're using. 
 
 See the _0.8_ branch if you cannot upgrade. Further development for `v0.9-beta` will happen here. The `0.9-dev` and `ios10` branches are obsolate and will be removed soon.
 
-Known issues 
-- Support for Android Orio is limited yet
+__Known issues__
+
+- Support for Android Orio is limited yet.
 - v0.9 and v0.8 aren't compatible with each other (Wont fix)
+- __Not compatible yet with Ionic__. Their wrapper is not part of this plugin. In future I will contribute to them to fix such issues in time. But for the moment I am busy enough with the plugin itself.
 
 Please report bugs or missing features!
 
@@ -283,22 +285,22 @@ The properties depend on the trigger type. Not all of them are supported across 
 |              | every         | String  | `month`          | x       | x   | x       |
 |              | every         | String  | `quarter`        | x       |     | x       |
 |              | every         | String  | `year`           | x       | x   | x       |
-|              | before        | Date    |                  |
-|              | firstAt       | Date    |                  | x       | x   |
+|              | before        | Date    |                  | x       |     | x       |
+|              | firstAt       | Date    |                  | x       | x   | x       |
 | Match        |
 |              | count         | Int     |                  | x       |     | x       |
 |              | every         | Object  | `minute`         | x       | x   | x       |
 |              | every         | Object  | `hour`           | x       | x   | x       |
 |              | every         | Object  | `day`            | x       | x   | x       |
-|              | every         | Object  | `weekday`        | x       | x   |
+|              | every         | Object  | `weekday`        | x       | x   | x       |
 |              | every         | Object  | `weekdayOrdinal` |         | x   |
-|              | every         | Object  | `week`           | x       | x   | x       |
-|              | every         | Object  | `weekOfMonth`    | x       | x   |
+|              | every         | Object  | `week`           |         | x   |
+|              | every         | Object  | `weekOfMonth`    | x       | x   | x       |
 |              | every         | Object  | `month`          | x       | x   | x       |
 |              | every         | Object  | `quarter`        |         | x   |
 |              | every         | Object  | `year`           | x       | x   | x       |
-|              | before        | Date    |                  |
-|              | after         | Date    |                  | x       | x   |
+|              | before        | Date    |                  | x       |     | x       |
+|              | after         | Date    |                  | x       | x   | x       |
 | Location     |
 |              | center        | Array   | `[lat, long]`    |         | x   |
 |              | radius        | Int     |                  |         | x   |
@@ -326,7 +328,7 @@ cordova.plugins.notification.local.schedule({
 
 ## Patterns
 
-Split the text by line breaks if the message comes from a single person and just to long to show in a single line.
+Split the text by line breaks if the message comes from a single person and just too long to show in a single line.
 
 ```js
 cordova.plugins.notification.local.schedule({
@@ -431,6 +433,9 @@ To unsubscribe from events:
 ```js
 cordova.plugins.notification.local.un(event, callback, scope);
 ```
+
+__Note:__ You have to provide the exact same callback to `cordova.plugins.notification.local.un` as you provided to `cordova.plugins.notification.local.on` to make unsubscribing work.  
+Hence you should define your callback as a separate function, not inline. If you want to use `this` inside of your callback, you also have to provide `this` as `scope` to `cordova.plugins.notification.local.on`.
 
 ### Custom
 

@@ -285,17 +285,6 @@ public final class Manager {
     }
 
     /**
-     * If a notification with an ID exists.
-     *
-     * @param id Notification ID
-     *
-     * @return true if found.
-     */
-    public boolean exist (int id) {
-        return get(id) != null;
-    }
-
-    /**
      * List of properties from all local notifications.
      */
     public List<JSONObject> getOptions() {

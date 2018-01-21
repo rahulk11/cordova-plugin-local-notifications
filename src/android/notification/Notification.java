@@ -33,6 +33,7 @@ import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.ArraySet;
 import android.support.v4.util.Pair;
+import android.util.SparseArray;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,6 +74,9 @@ public final class Notification {
 
     // Key for private preferences
     private static final String PREF_KEY_PID = "NOTIFICATION_PID";
+
+    // Cache for the builder instances
+    private static SparseArray<NotificationCompat.Builder> cache = null;
 
     // Application context passed by constructor
     private final Context context;
@@ -233,6 +237,8 @@ public final class Notification {
      *
      * @param intent The intent to broadcast.
      * @param cls    The broadcast class.
+     *
+     * @return false if the receiver could not be invoked.
      */
     private boolean trigger (Intent intent, Class<?> cls) {
         BroadcastReceiver receiver;
@@ -254,10 +260,7 @@ public final class Notification {
      */
     public void clear() {
         getNotMgr().cancel(getId());
-
-        if (isRepeating())
-            return;
-
+        if (isRepeating()) return;
         unpersist();
     }
 
@@ -267,7 +270,8 @@ public final class Notification {
     public void cancel() {
         cancelScheduledAlarms();
         unpersist();
-        getNotMgr().cancel(options.getId());
+        getNotMgr().cancel(getId());
+        clearCache();
     }
 
     /**
@@ -302,9 +306,11 @@ public final class Notification {
      * Present the local notification to user.
      */
     public void show() {
+        if (builder == null) return;
 
-        if (builder == null)
-            return;
+        if (options.isWithProgressBar()) {
+            cacheBuilder();
+        }
 
         grantPermissionToPlaySoundFromExternal();
         getNotMgr().notify(getId(), builder.build());
@@ -415,6 +421,38 @@ public final class Notification {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * Caches the builder instance so it can be used later.
+     */
+    private void cacheBuilder () {
+
+        if (cache == null) {
+            cache = new SparseArray<NotificationCompat.Builder>();
+        }
+
+        cache.put(getId(), builder);
+    }
+
+    /**
+     * Find the cached builder instance.
+     *
+     * @param key The key under where to look for the builder.
+     *
+     * @return null if no builder instance could be found.
+     */
+    static NotificationCompat.Builder getCachedBuilder (int key) {
+        return (cache != null) ? cache.get(key) : null;
+    }
+
+    /**
+     * Caches the builder instance so it can be used later.
+     */
+    private void clearCache () {
+        if (cache != null) {
+            cache.delete(getId());
         }
     }
 

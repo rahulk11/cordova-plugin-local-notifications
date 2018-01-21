@@ -88,7 +88,7 @@ public final class Request {
      *
      * @return The notification ID as the string
      */
-    public String getIdentifier() {
+    String getIdentifier() {
         return options.getId().toString() + "-" + getOccurrence();
     }
 
@@ -130,9 +130,13 @@ public final class Request {
         if (triggerDate == null)
             return null;
 
-        if ((now.getTimeInMillis() - triggerDate.getTime()) > 60000) {
+        long time = triggerDate.getTime();
+
+        if ((now.getTimeInMillis() - time) > 60000)
             return null;
-        }
+
+        if (time >= spec.optLong("before", time + 1))
+            return null;
 
         return triggerDate;
     }

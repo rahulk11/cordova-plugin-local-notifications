@@ -123,7 +123,7 @@ public final class Builder {
         extras.putInt(Notification.EXTRA_ID, options.getId());
         extras.putString(Options.EXTRA_SOUND, sound.toString());
 
-        builder = new NotificationCompat.Builder(context, Manager.CHANNEL_ID)
+        builder = findOrCreateBuilder()
                 .setDefaults(options.getDefaults())
                 .setExtras(extras)
                 .setOnlyAlertOnce(false)
@@ -404,6 +404,20 @@ public final class Builder {
      */
     private boolean isUpdate() {
         return extras != null && extras.getBoolean(EXTRA_UPDATE, false);
+    }
+
+    /**
+     * Returns a cached builder instance or creates a new one.
+     */
+    private NotificationCompat.Builder findOrCreateBuilder() {
+        int key = options.getId();
+        NotificationCompat.Builder builder = Notification.getCachedBuilder(key);
+
+        if (builder == null) {
+            builder = new NotificationCompat.Builder(context, options.getChannel());
+        }
+
+        return builder;
     }
 
 }

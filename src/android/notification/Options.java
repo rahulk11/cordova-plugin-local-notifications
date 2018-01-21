@@ -91,7 +91,7 @@ public final class Options {
      * @param context The application context.
      * @param options The options dict map.
      */
-    public Options(Context context, JSONObject options) {
+    Options(Context context, JSONObject options) {
         this.context = context;
         this.options = options;
         this.assets  = AssetUtil.getInstance(context);
@@ -132,7 +132,7 @@ public final class Options {
      *
      * @return The notification ID as the string
      */
-    public String getIdentifier() {
+    String getIdentifier() {
         return getId().toString();
     }
 
@@ -335,7 +335,7 @@ public final class Options {
     /**
      * Sound file path for the local notification.
      */
-    public Uri getSound() {
+    Uri getSound() {
         return assets.parse(options.optString("sound", null));
     }
 
